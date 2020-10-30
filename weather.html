@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather API</title>
+    <style>
+        *{font-family: tahoma ;}
+        .degree{ font-size: 20px;}
+        .hot{color: rgb(255, 0, 0); font-size: 19px;}
+        .cold{color: rgb(46, 43, 226); font-size: 19px;}
+
+        body{
+            position: relative;
+            background: linear-gradient(to left, rgb(45, 255, 139), rgb(57, 192, 255))}
+        .size{width: 90px; height: 90px; margin-top: 12px;}
+        
+        .data{ padding-left: 30px;}
+        
+        .data div{margin-left: 0px;}
+
+        .par{font-size: 28px; margin: 10px 0;}
+        .line{height: 3px; width: 200px; background: black;}
+        .wrap{margin-top: 15px;}
+
+        form #city{
+            width: 280px;
+            height: 30px;
+            margin-bottom: 10px;
+            font-size: 16px;
+            border-style: none;
+            outline: none;
+            border-radius: 14px;
+        }
+        form #submit{
+            width: 53px;
+            height: 32px;
+            border-style: none;
+            font-size: 14px;
+            outline: none;
+            cursor: pointer;
+            background-color: rgb(81, 64, 230);
+            color: white;
+            border-radius: 14px;
+        }
+        form #submit:hover{width: 55px; height: 35px;}
+        h2{ margin-left: 65px;}
+
+        /*forecast weather*/
+        .fontSize{font-size: 17px; color: rgb(49, 49, 49);}
+        .condition{color: rgb(100, 84, 238); font-size: 20px;}
+        .forecast{ padding-top: 16px; padding-left: 16px;}
+        .button{
+            width: 220px;
+            height: 30px;
+            border-style: none;
+            font-size: 16px;
+            outline: none;
+            cursor: pointer;
+            background-color: rgb(222, 90, 255);
+            color: white;
+            border-radius: 14px;}
+            .content {display: flex; }
+            .content .column2{margin-left: 60px;}
+            .content .column3{margin-left: 60px;}
+            .editor{padding-left: 50px;}
+            .regulator{
+                padding-left: 50px;
+                transform: translateX(-100%);
+            }
+
+            /*Animation*/
+            .container-slider{
+                transform: translateX(-100%);
+                transition: 1s;
+                padding-bottom: 80px;
+            } 
+            .toggle{
+                transform: translateX(0%);
+                transition: 1s;
+            }
+            .switch{
+                width: 53px;
+                height: 30px;
+                border-style: none;
+                font-size: 14px;
+                outline: none;
+                cursor: pointer;
+                background-color: rgb(81, 64, 230);
+                color: white;
+                border-radius: 14px;
+                margin-left: 5px;
+            }
+            /*developer signiture */
+            .wadie{
+                position: absolute;
+                bottom: 0%;
+                left: 40%;
+            } 
+            .wadie p {
+                font-weight: bold;
+                font-size: 15px;
+            }
+            .wadie p span{
+                color: rgb(28, 100, 255);
+            }
+            
+    </style>
+</head>
+
+<body>
+    <h1 style="color: white;">My Weather APP</h1><br>
+    <h2>Select a City</h2>
+    <form id="form">
+        <input type="text" id="city" placeholder="City...">
+        <input type="submit" value="Search" id="submit">
+    </form>
+
+<div class="regulator">  
+    <div class="data"></div>
+    <!-- for button -->
+    <div class="forecast"></div>
+</div>
+
+
+<div class="container-slider">
+    <div class="editor">
+        <!-- for icon -->
+        <div class="forecast2"></div>
+        <!-- for content -->
+        <div class="content">
+            <div class="column1"></div>
+            <div class="column2"></div>
+            <div class="column3"></div>
+        </div>
+    </div>
+</div>
+<div class="wadie">
+    <p>@Designed & Developed By <span>Wadie Alika</span></p>
+</div> 
+
+</body>
+<script>
+//const city = 'london';
+//const endpoint = `http://api.weatherapi.com/v1/current.json?key=ad96a4be82ff453dab2111516202305&q=${city}`;
+
+const form = document.querySelector('#form');
+
+
+const dataDiv = document.querySelector('.data');
+const wrapper = document.createElement('div');
+wrapper.classList.add('wrap')
+//output icon
+const div0 = document.createElement('div');
+const p = document.createElement('p');
+p.classList.add('par');
+div0.appendChild(p);
+const image = document.createElement('img');
+image.classList.add('size');
+div0.appendChild(image);
+wrapper.appendChild(div0);
+dataDiv.appendChild(wrapper);
+
+function myIconOutput(icono){
+    p.innerHTML = 'The Current Weather';
+    image.src = icono;
+}
+//output location
+const div4 = document.createElement('div');
+const loc4 = document.createElement('p');
+loc4.classList.add('par');
+div4.appendChild(loc4);
+wrapper.appendChild(div4);
+dataDiv.appendChild(wrapper);
+
+function locations(place, country){
+    loc4.innerHTML = place+', '+country;
+}
+
+//output condition
+const div5 = document.createElement('div');
+const myCond = document.createElement('p');
+div5.classList.add('degree');
+div5.appendChild(myCond);
+wrapper.appendChild(div5);
+dataDiv.appendChild(wrapper);
+function conditions(condit){
+    myCond.innerHTML = condit;
+}
+
+//Output teperature
+const div6 = document.createElement('div');
+const temper = document.createElement('p');
+div6.classList.add('degree');
+div6.appendChild(temper);
+wrapper.appendChild(div6);
+dataDiv.appendChild(wrapper);
+function temperature(tempo){
+    if(tempo > 25) {
+        div6.classList.add('hot');
+    }else{
+        div6.classList.add('cold');
+    }
+    temper.innerHTML = tempo+'° degrees';
+}
+
+//output winds
+const div7 = document.createElement('div');
+const windy = document.createElement('p');
+div7.appendChild(windy);
+wrapper.appendChild(div7);
+dataDiv.appendChild(wrapper);
+function winds(wind){
+    windy.innerHTML = 'Wind speed MPH '+wind;
+}
+
+//Humidity and Moisture
+const div8 = document.createElement('div');
+const moisture = document.createElement('p');
+div8.appendChild(moisture); 
+wrapper.appendChild(div8);
+dataDiv.appendChild(wrapper); 
+function humidity(humid){
+    moisture.innerHTML = 'Humidity '+humid;
+}
+
+//local time
+const div9 = document.createElement('div');
+const timer = document.createElement('p');
+div9.appendChild(timer);
+wrapper.appendChild(div9);
+dataDiv.appendChild(wrapper);
+function localTime(time){
+    timer.innerHTML = 'Local time '+time;
+}
+
+// BUTTON FORECAST
+const futureDiv = document.querySelector('.forecast');
+const forecast = document.createElement('button'); 
+forecast.innerHTML = 'Click forecast';
+forecast.classList.add('button');
+futureDiv.appendChild(forecast);
+//toggle button
+const toggle = document.createElement('button');
+toggle.classList.add('switch');
+toggle.innerHTML = 'show';
+futureDiv.appendChild(toggle);
+toggle.addEventListener('click', toggler);
+function toggler(){
+    const window = document.querySelector('.container-slider');
+    if(window.classList == 'container-slider'){
+        window.classList.add('toggle');
+        toggle.innerHTML = 'hide';
+    } else{
+        window.classList.remove('toggle');
+        toggle.innerHTML = 'show';
+    } 
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+form.addEventListener('submit', getWeather);
+const input = document.querySelector('#city').value;
+
+function getWeather(e){
+    e.preventDefault();
+    const city = document.querySelector('#city').value;
+
+    if(city !== ''){
+        function stoooooop(){
+            const endpoint = `http://api.weatherapi.com/v1/current.json?key=ad96a4be82ff453dab2111516202305&q=${city}`;
+            fetch(endpoint).then((response)=>{
+                return response.json()
+            }).then((data)=>{
+
+                const icon = data.current.condition.icon;
+                myIconOutput(icon);   
+
+                const position = data.location.name;
+                const country = data.location.country;
+                console.log(country);
+                locations(position, country);
+
+                const condition = data.current.condition.text;
+                conditions(condition);
+
+                const tempered = data.current.temp_c;
+                temperature(tempered);
+
+                const wind = data.current.wind_mph;
+                winds(wind);
+
+                const moisture = data.current.humidity;
+                humidity(moisture);
+
+                const time = data.location.localtime;
+                localTime(time);
+
+                //show weather
+                const regulator = document.querySelector('.regulator');
+                function show(){
+                    regulator.classList.add('toggle');
+                }
+                show();
+                //clear field
+                clear();
+                //forecast weather
+                function tomorrow(){
+                    forecast.addEventListener('click', futureWeather);
+                }
+
+
+
+
+                function futureWeather(){
+                    console.log('forecast weather is clicked');
+                    const endpoint2 = `http://api.weatherapi.com/v1/forecast.json?key=ad96a4be82ff453dab2111516202305&q=${city}`;
+                    getData(endpoint2);
+                }
+                tomorrow();
+            
+            }).catch(()=> {
+                console.error('something wrong Wadie');
+                alert('Invalid City');
+                clear();
+            });   
+        }
+        stoooooop();
+    }else{
+        alert('Please type something');
+    }
+    //setInterval(stoooooop, 1000);
+}
+
+function clear(){
+    document.querySelector('#city').value = '';
+}
+
+//Forecast weather
+function getData(url){
+    
+    fetch(url).then(response => response.json()).then(ready => {
+        //some text
+        const myLoc = ready.location.name;
+        textOutput(myLoc);
+        //icon
+        const myicon = ready.forecast.forecastday[0].day.condition.icon;
+        forecastIcon(myicon);
+        //condition
+        const condition = ready.forecast.forecastday[0].day.condition.text;
+        forecastCond(condition);
+        //temperature
+        const max = ready.forecast.forecastday[0].day.maxtemp_c;
+        const min = ready.forecast.forecastday[0].day.mintemp_c;
+        maxminTemp(max, min);
+        //average temperature
+        const avg = ready.forecast.forecastday[0].day.avgtemp_c;
+        avgtemp(avg);
+        //win & humidity
+        const wind = ready.forecast.forecastday[0].day.maxwind_mph;
+        const humid = ready.forecast.forecastday[0].day.avghumidity;
+        windHumidity(wind, humid);  
+        //rain & snow
+        const rain = ready.forecast.forecastday[0].day.daily_will_it_rain;
+        const snow = ready.forecast.forecastday[0].day.daily_will_it_snow;
+        rainSnow(rain, snow);
+        //astro text
+        astro();
+        //sunset & sunrise
+        const rise = ready.forecast.forecastday[0].astro.sunrise;
+        const set = ready.forecast.forecastday[0].astro.sunset;
+        sun(rise, set);
+
+    }).catch(err => console.error('Forecast bug'))
+}
+
+///special DOM function
+const futureIcon = document.querySelector('.forecast2');
+// output text
+const tex = document.createElement('p');
+tex.classList.add('par');
+futureIcon.appendChild(tex);
+function textOutput(myLoc){
+    tex.innerHTML = 'The Forecast Weather <br>'+myLoc;
+    //tex.innerHTML = myLoc;
+}
+
+//output icon
+const images = document.createElement('img');
+images.classList.add('size');
+futureIcon.appendChild(images);
+function forecastIcon(icon){
+    images.src = icon;
+}
+
+//content wrapper
+const column1 = document.querySelector('.column1');
+const column2 = document.querySelector('.column2');
+const column3 = document.querySelector('.column3');
+
+//forecast condition
+const p0 = document.createElement('p');
+p0.classList.add('condition');
+column1.appendChild(p0);
+function forecastCond(condit){
+    p0.innerHTML = 'Forecast condition '+condit;
+} 
+
+// min max teperature
+const p1 = document.createElement('p');
+const p2 = document.createElement('p');
+p1.classList.add('hot');
+p2.classList.add('cold');
+column1.appendChild(p1); 
+column1.appendChild(p2); 
+function maxminTemp(max, min){
+    p1.innerHTML = `Max Temperature ${max}° degrees`;
+    p2.innerHTML = `Min Temperature ${min}° degrees`;
+}
+
+//average temperature
+const p3 = document.createElement('p');
+p3.classList.add('fontSize');
+column1.appendChild(p3);
+function avgtemp(avg){
+    p3.innerHTML = 'Average temperature '+avg+'° degrees';
+} 
+
+// wind humidity
+const p4 = document.createElement('p');
+const p5 = document.createElement('p');
+p4.classList.add('fontSize');
+p5.classList.add('fontSize');
+column2.appendChild(p4); 
+column2.appendChild(p5); 
+function windHumidity(wind, humid){
+    p4.innerHTML = `Max wind speed MPH ${wind}`;
+    p5.innerHTML = `Humidity ${humid}`;
+}
+
+//rain snow
+const p6 = document.createElement('p');
+const p7 = document.createElement('p');
+p6.classList.add('fontSize');
+p7.classList.add('fontSize');
+column2.appendChild(p6); 
+column2.appendChild(p7); 
+function rainSnow(rain, snow){
+    p6.innerHTML = `Daily will it rain ${rain}`;
+    p7.innerHTML = `Daily will it snow ${snow}`;
+}
+
+// astronomie
+const p8 = document.createElement('p');
+p8.classList.add('degree');
+column3.appendChild(p8);
+function astro(){
+    p8.innerHTML = 'Astro Infos';
+}
+
+// sun info
+const p9 = document.createElement('p');
+const p10 = document.createElement('p');
+p9.classList.add('fontSize');
+p10.classList.add('fontSize');
+column3.appendChild(p9); 
+column3.appendChild(p10); 
+function sun(rise, set){
+    p9.innerHTML = `Sunrise at ${rise}`;
+    p10.innerHTML = `Sunset at ${set}`;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</html>
